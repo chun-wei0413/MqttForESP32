@@ -11,7 +11,7 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 
 const int devicePin = 4;
-const char* deviceID = "esp32"; // 替換為您的裝置識別符號
+const char* deviceID = "000001"; // 替換為您的裝置識別符號
 
 void setup() {
   pinMode(devicePin, OUTPUT);
@@ -51,15 +51,15 @@ void callback(char* topic, byte* payload, unsigned int length) {
     }
     Serial.println();
 
-    if (messageTemp == "on") {
+    if (messageTemp == "\"on\"") {
       digitalWrite(devicePin, HIGH);
       Serial.println("on");
-    } else if (messageTemp == "off") {
+    } else if (messageTemp == "\"off\"") {
       digitalWrite(devicePin, LOW);
       Serial.println("off");
-    } else if (messageTemp == "state") {
+    } else if (messageTemp == "\"state\"") {
       int state = digitalRead(devicePin);
-      String topic = "/response/esp32/state";
+      String topic = "/response/000001/state";
       client.publish(topic.c_str(), String(state).c_str());
       if(state==0)
       Serial.println("state=1");
@@ -73,7 +73,7 @@ void reconnect() {
     Serial.println("Reconnecting to MQTT broker...");
     if (client.connect(deviceID)) {
       Serial.println("Connected to MQTT broker");
-      client.subscribe("esp32/command");  // 訂閱所有裝置的命令主題
+      client.subscribe("000001/command");  // 訂閱所有裝置的命令主題
     } else {
       Serial.print("Failed to connect to MQTT broker, rc=");
       Serial.print(client.state());
